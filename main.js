@@ -1,5 +1,8 @@
 /* global $, ko, FormData */
 (function () {
+
+    var filePostUrl = "http://PlansReseau.azurewebsites.net/api/TemplateAnalyzeTrigger";
+    
     var viewModel = {
 	templateFile: ko.observable(),
 	analyzeTemplate: function(file) {
@@ -7,7 +10,7 @@
 		var formData = new FormData();
 		formData.append("template", file);
 		var request = new XMLHttpRequest();
-		request.open("POST",".");
+		request.open("POST", filePostUrl);
 		request.send(formData);
 	    }
 	}

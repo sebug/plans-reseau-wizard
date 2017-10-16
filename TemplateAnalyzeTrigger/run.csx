@@ -4,18 +4,15 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 {
     log.Info("C# HTTP trigger function processed a request.");
 
-    // parse query parameter
-    string name = req.GetQueryNameValuePairs()
-        .FirstOrDefault(q => string.Compare(q.Key, "name", true) == 0)
-        .Value;
+    var streamProvider = new MultipartMemoryStreamProvider();
 
-    // Get request body
-    dynamic data = await req.Content.ReadAsAsync<object>();
+    req.Content.ReadAsMultipartAsync(streamProvider);
 
-    // Set name to query string or body data
-    name = name ?? data?.name;
+    foreach (HttpContent ctnt in streamProvider.Contents)
+    {
+	Stream stream = ctnt.ReadAsStreamAsync().Result;
+	log.info($"stream length = {stream.Length}");
+    }
 
-    return name == null
-        ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-        : req.CreateResponse(HttpStatusCode.OK, "Hello " + name);
+    return req.CreateResponse(HttpStatusCode.OK, "Read the template file");
 }
