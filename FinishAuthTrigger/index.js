@@ -14,7 +14,8 @@ module.exports = function (context, req) {
 	    client_id: context.bindings.settings.Value,
 	    redirect_uri: (req.query.redirectUri || req.body.redirectUri),
 	    client_secret: context.bindings.secret.Value,
-	    code: (req.query.code || req.body.code)
+	    code: (req.query.code || req.body.code),
+	    grant_type: 'authorization_code'
 	}
     }, function (error, response, body) {
 	context.log('Result received: ' + body);
