@@ -46,14 +46,40 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    if (!String.IsNullOrEmpty(currentKey))
 		    {
 			dict[currentKey] = str;
-			log.Info(currentKey + " -> " + str);
 			currentKey = null;
 		    }
 		    
 		    if (!String.IsNullOrEmpty(str))
 		    {
-			if (str.IndexOf("Genre de cours", StringComparison.InvariantCultureIgnoreCase) >= 0) {
+			if (str.IndexOf("Genre de cours", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			{
 			    currentKey = "genre";
+			}
+			else if (str.IndexOf("N° de cours", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			{
+			    currentKey = "numeroDeCours";
+			}
+			else if (str.IndexOf("Organisation", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			{
+			    currentKey = "organisation";
+			}
+			else if (str.IndexOf("Date", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			{
+			    currentKey = "date";
+			}
+			else if (str.IndexOf("Emplacement", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			{
+			    currentKey = "emplacement";
+			}
+			else if (str.IndexOf("Etabli par", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
+			{
+			    var parts = str.Split(':');
+			    dict["etabliPar"] = parts[1].Trim();
+			}
+			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(";"))
+			{
+			    var parts = str.split(':');
+			    dict["telephone"] = parts[1].Trim();
 			}
 		    }
 		    log.Info(string.Format("Shared string {0}: {1}", ssid, str));
@@ -62,6 +88,10 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		{
 		    log.Info(string.Format("Cell contents: {0}", cell.CellValue.Text));
 		}
+	    }
+	    foreach (var kvp in dict)
+	    {
+		log.Info(kvp.Key + " -> " + kvp.Value);
 	    }
 	}
     }
