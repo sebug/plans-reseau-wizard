@@ -1,10 +1,16 @@
 module.exports = function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
+    var staticUrl = 'http://storageplansreseau.blob.core.windows.net/'
+
     if (req.query.name || (req.body && req.body.name)) {
         context.res = {
             // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
+            body: "Ohai " + (req.query.name || req.body.name),
+	    headers: {
+		"Access-Control-Allow-Credentials": "true",
+		"Access-Control-Allow-Origin": staticUrl
+	    }
         };
     }
     else {
