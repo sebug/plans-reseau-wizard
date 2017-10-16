@@ -4,8 +4,7 @@ module.exports = function (context, req) {
     var staticUrl = 'http://storageplansreseau.blob.core.windows.net/'
 
     context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: "Ohai " + context.bindings.settings + staticUrl
+        body: "Ohai " + context.bindings.settings.Value + staticUrl
     };
     context.done();
 };
