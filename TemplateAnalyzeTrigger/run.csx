@@ -1,4 +1,6 @@
 #r "WindowsBase"
+#r "System.IO"
+#r "System.IO.Packaging"
 #r "DocumentFormat.OpenXml.dll"
 using System.Net;
 using System.IO;
