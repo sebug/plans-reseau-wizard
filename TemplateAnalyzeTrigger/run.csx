@@ -16,6 +16,21 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     foreach (HttpContent ctnt in streamProvider.Contents)
     {
 	Stream stream = await ctnt.ReadAsStreamAsync();
+	using (SpreadsheetDocument doc = SpreadsheetDocument.Open(stream, false)) {
+
+	    WorkbookPart workbookPart = doc.WorkbookPart;
+	    SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+	    SharedStringTable sst = sstpart.SharedStringTable;
+
+	    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+	    Worksheet sheet = worksheetPart.Worksheet;
+
+	    var cells = sheet.Descendants<Cell>();
+	    var rows = sheet.Descendants<Row>();
+
+	    log.Info(string.Format("Row count = {0}", rows.LongCount()));
+	    log.Info(string.Format("Cell count = {0}", cells.LongCount()));
+	}
 	log.Info($"stream length = {stream.Length}");
     }
 
