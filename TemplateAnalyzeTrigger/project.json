@@ -1,0 +1,10 @@
+{
+  "frameworks": {
+    "net46":{
+      "dependencies": {
+        "DocumentFormat.OpenXml": "2.7.2"
+      }
+    }
+   }
+}
+
