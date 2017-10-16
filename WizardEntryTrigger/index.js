@@ -5,7 +5,7 @@ module.exports = function (context, req) {
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: "Ohai " + context.bindings.settings + staticUrl;
+        body: "Ohai " + context.bindings.settings + staticUrl
     };
     context.done();
 };
