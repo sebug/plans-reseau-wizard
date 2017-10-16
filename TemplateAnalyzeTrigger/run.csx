@@ -89,10 +89,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    log.Info(string.Format("Cell contents: {0}", cell.CellValue.Text));
 		}
 	    }
-	    foreach (var kvp in dict)
-	    {
-		log.Info(kvp.Key + " -> " + kvp.Value);
-	    }
+	    req.CreateResponse(HttpStatusCode.OK, dict);
 	}
     }
 
