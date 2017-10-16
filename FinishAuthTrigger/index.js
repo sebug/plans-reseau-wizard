@@ -17,6 +17,7 @@ module.exports = function (context, req) {
 	    code: (req.query.code || req.body.code)
 	}
     }, function (error, response, body) {
+	context.log('Result received: ' + body);
 	if (response.statusCode == 200) {
 	    context.res = {
 		body: body
