@@ -22,3 +22,5 @@ To update (since I'm not yet doing CD):
 
 	az functionapp deployment source sync --name PlansReseau --resource-group plansReseauGroup
 
+You'll also have to allow CORS via the Azure Portal (doesn't seem to be an API command for that yet?). Add http://storageplansreseau.blob.core.windows.net
+
