@@ -1,4 +1,9 @@
+#r "DocumentFormat.OpenXml.dll"
+#r "WindowsBase.dll"
 using System.Net;
+using System.IO;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
