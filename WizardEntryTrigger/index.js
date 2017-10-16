@@ -3,8 +3,7 @@ module.exports = function (context, req) {
 
     context.res = {
         body: {
-	    appID: String(context.bindings.settings.Value),
-	    secret: String(context.bindings.secret.Value)
+	    appID: String(context.bindings.settings.Value)
 	}
     };
     context.done();

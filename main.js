@@ -63,7 +63,7 @@
 
     function fetchWizardEntryData() {
 	return $.ajax({
-	    url: 'https://PlansReseau.azurewebsites.net/api/WizardEntryTrigger?name=Sebastian',
+	    url: 'https://PlansReseau.azurewebsites.net/api/WizardEntryTrigger',
 	    dataType: 'json'
 	}).then(function (items) {
 	    viewModel.oneDriveAppID(items.appID);
@@ -74,16 +74,13 @@
     function postIfHasCode() {
 	var parts = URI.parseQuery(location.search);
 	if (parts.code) {
-	    $.ajax({
-		url: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+	    return $.ajax({
+		url: 'https://PlansReseau.azurewebsites.net/api/FinishAuthTrigger',
+		dataType: 'json',
 		data: {
-		    client_id: viewModel.oneDriveAppID(),
-		    redirect_uri: location.href.replace(location.search, ""),
-		    client_secret: viewModel.oneDriveSecret(),
 		    code: parts.code
 		}
-	    }).then(function (res) {
-		console.log(res);
+	    }).then(function (items) {
 	    });
 	}
     }
