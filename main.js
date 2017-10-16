@@ -78,7 +78,8 @@
 		url: 'https://PlansReseau.azurewebsites.net/api/FinishAuthTrigger',
 		dataType: 'json',
 		data: {
-		    code: parts.code
+		    code: parts.code,
+		    redirectUri: location.href.replace(location.search, '')
 		}
 	    }).then(function (items) {
 		console.log(items);
