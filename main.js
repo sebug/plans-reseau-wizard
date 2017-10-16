@@ -79,7 +79,7 @@
 		dataType: 'json',
 		data: {
 		    code: parts.code,
-		    redirectUri: location.href.replace(location.search, '')
+		    redirectUri: location.href
 		}
 	    }).then(function (items) {
 		console.log(items);
