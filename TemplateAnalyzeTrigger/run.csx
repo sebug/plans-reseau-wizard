@@ -32,8 +32,21 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
 	    log.Info(string.Format("Row count = {0}", rows.LongCount()));
 	    log.Info(string.Format("Cell count = {0}", cells.LongCount()));
+
+	    foreach (Cell cell in cells)
+	    {
+		if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
+		{
+		    int ssid = int.Parse(cell.CellValue.Text);
+		    string str = sst.ChildElements[ssid].InnerText;
+		    log.Info(string.Format("Shared string {0}: {1}", ssid, str));
+		}
+		else if (cell.CellValue != null)
+		{
+		    log.Info(string.Format("Cell contents: {0}", cell.CellValue.Text));
+		}
+	    }
 	}
-	log.Info($"stream length = {stream.Length}");
     }
 
     return req.CreateResponse(HttpStatusCode.OK, "Read the template file");
