@@ -33,7 +33,7 @@
     };
 
     viewModel.oneDriveAppURL = ko.computed(function () {
-	return 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + viewModel.oneDriveAppID() + '&scope=files.readwrite&response_type=code&redirect_url=' + encodeURI(location.href)
+	return 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + viewModel.oneDriveAppID() + '&scope=files.readwrite&response_type=token&redirect_url=' + encodeURI(location.href)
     });
 
     function fillFields(templateInfo) {
@@ -71,25 +71,14 @@
 	});
     }
 
-    function postIfHasCode() {
-	var parts = URI.parseQuery(location.search);
-	if (parts.code) {
-	    return $.ajax({
-		url: 'https://PlansReseau.azurewebsites.net/api/FinishAuthTrigger',
-		dataType: 'json',
-		data: {
-		    code: parts.code,
-		    redirectUri: location.href
-		}
-	    }).then(function (items) {
-		console.log(items);
-	    });
-	}
+    function postDocument() {
+	var access_token = /access_token=([^&]+)/.exec(location.href)[1];
+	console.log(access_token);
     }
     
     $(document).ready(function () {
 	ko.applyBindings(viewModel, $('.main-content')[0]);
 	fetchWizardEntryData();
-	postIfHasCode();
+	postDocument();
     });
 }());
