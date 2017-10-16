@@ -8,6 +8,15 @@
 	    "name": "req"
 	},
 	{
+	    "name": "settings",
+	    "type": "table",
+	    "direction": "in",
+	    "tableName": "reseauSettings",
+	    "partitionKey": "prod",
+	    "rowKey": "oneDriveAppID",
+	    "connection": "AzureWebJobsStorage"
+	},
+	{
 	    "type": "http",
 	    "direction": "out",
 	    "name": "res"
