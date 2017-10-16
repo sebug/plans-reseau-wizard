@@ -1,5 +1,3 @@
-#r "DocumentFormat.OpenXml.dll"
-#r "WindowsBase.dll"
 using System.Net;
 using System.IO;
 using DocumentFormat.OpenXml.Packaging;
