@@ -79,7 +79,8 @@
 		dataType: 'json',
 		data: {
 		    code: parts.code
-		}
+		},
+		method: 'POST'
 	    }).then(function (items) {
 	    });
 	}
