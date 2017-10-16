@@ -1,3 +1,4 @@
+#r "WindowsBase"
 using System.Net;
 using System.IO;
 using DocumentFormat.OpenXml.Packaging;
