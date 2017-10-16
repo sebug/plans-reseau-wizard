@@ -52,7 +52,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    
 		    if (!String.IsNullOrEmpty(str))
 		    {
-			if (str.IndexOf("Genre de cours", StringComparison.InvariantCultureIgnoreCase)) {
+			if (str.IndexOf("Genre de cours", StringComparison.InvariantCultureIgnoreCase) >= 0) {
 			    currentKey = "genre";
 			}
 		    }
