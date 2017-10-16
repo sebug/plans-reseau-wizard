@@ -17,6 +17,15 @@
 	    "connection": "AzureWebJobsStorage"
 	},
 	{
+	    "name": "secret",
+	    "type": "table",
+	    "direction": "in",
+	    "tableName": "reseauSettings",
+	    "partitionKey": "prod",
+	    "rowKey": "oneDriveSecret",
+	    "connection": "AzureWebJobsStorage"
+	},
+	{
 	    "type": "http",
 	    "direction": "out",
 	    "name": "res"
