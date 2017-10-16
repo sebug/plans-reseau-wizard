@@ -1,3 +1,4 @@
+#r "DocumentFormat.OpenXml"
 #r "WindowsBase"
 using System.Net;
 using System.IO;
