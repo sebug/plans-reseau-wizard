@@ -76,7 +76,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			    var parts = str.Split(':');
 			    dict["etabliPar"] = parts[1].Trim();
 			}
-			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(";"))
+			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
 			{
 			    var parts = str.Split(':');
 			    dict["telephone"] = parts[1].Trim();
