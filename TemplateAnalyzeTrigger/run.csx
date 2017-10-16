@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Collections.Generic;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
@@ -33,12 +34,28 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 	    log.Info(string.Format("Row count = {0}", rows.LongCount()));
 	    log.Info(string.Format("Cell count = {0}", cells.LongCount()));
 
+	    Dictionary<string, string> dict = new Dictionary<string, string>();
+	    string currentKey = null;
+
 	    foreach (Cell cell in cells)
 	    {
 		if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
 		{
 		    int ssid = int.Parse(cell.CellValue.Text);
 		    string str = sst.ChildElements[ssid].InnerText;
+		    if (!String.IsNullOrEmpty(currentKey))
+		    {
+			dict[currentKey] = str;
+			log.Info(currentKey + " -> " + str);
+			currentKey = null;
+		    }
+		    
+		    if (!String.IsNullOrEmpty(str))
+		    {
+			if (str.IndexOf("Genre de cours", StringComparison.InvariantCultureIgnoreCase)) {
+			    currentKey = "genre";
+			}
+		    }
 		    log.Info(string.Format("Shared string {0}: {1}", ssid, str));
 		}
 		else if (cell.CellValue != null)
