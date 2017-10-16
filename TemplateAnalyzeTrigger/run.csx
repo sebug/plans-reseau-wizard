@@ -78,7 +78,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			}
 			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(";"))
 			{
-			    var parts = str.split(':');
+			    var parts = str.Split(':');
 			    dict["telephone"] = parts[1].Trim();
 			}
 		    }
