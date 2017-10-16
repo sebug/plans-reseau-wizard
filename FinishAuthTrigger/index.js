@@ -2,10 +2,7 @@ var request = require('request');
 
 module.exports = function (context, req) {
     context.log('JavaScript HTTP trigger for finish auth. ' +
-		context.bindings.settings.Value + " " +
-		context.bindings.secret.Value + " " +
-		(req.query.code || req.body.code) + " " +
-		(req.query.redirectUri || req.body.redirectUri));
+		encodeURI(req.query.redirectUri || req.body.redirectUri));
 
     request({
 	method: 'POST',
