@@ -15,4 +15,4 @@ You'll need to specify environment variables for AZURE_STORAGE_CONNECTION_STRING
 	az storage blob upload --container-name reseaustatic --file index.html --name index.html
 	az storage container set-permission --name reseaustatic --public-access blob
 	az storage blob update --container-name reseaustatic --name index.html --content-type "text/html"
-
+	az storage blob upload --container-name reseaustatic --file main.js --name main.js --content-type "application/javascript"
