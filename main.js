@@ -6,7 +6,8 @@
 
     function fetchWizardEntryData() {
 	return $.ajax({
-	    url: 'http://PlansReseau.azurewebsites.net/api/WizardEntryTrigger?name=Sebastian'
+	    url: 'http://PlansReseau.azurewebsites.net/api/WizardEntryTrigger?name=Sebastian',
+	    dataType: 'json'
 	}).then(function (msg) {
 	    viewModel.message(msg);
 	});
