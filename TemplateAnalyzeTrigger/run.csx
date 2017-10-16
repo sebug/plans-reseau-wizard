@@ -59,7 +59,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			{
 			    currentKey = "numeroDeCours";
 			}
-			else if (str.IndexOf("Organisation", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			else if (str.IndexOf("Organisation", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
 			{
 			    currentKey = "organisation";
 			}
