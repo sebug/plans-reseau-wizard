@@ -23,6 +23,8 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
     await req.Content.ReadAsMultipartAsync(streamProvider);
 
+    Dictionary<string, string> dict = new Dictionary<string, string>();
+
     foreach (HttpContent ctnt in streamProvider.Contents)
     {
 	Stream stream = await ctnt.ReadAsStreamAsync();
@@ -38,7 +40,6 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 	    var cells = sheet.Descendants<Cell>();
 	    var rows = sheet.Descendants<Row>();
 
-	    Dictionary<string, string> dict = new Dictionary<string, string>();
 	    string currentKey = null;
 
 	    // First loop through the cells is just to get the
@@ -52,7 +53,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    if (!String.IsNullOrEmpty(currentKey))
 		    {
 			// Store the position where we can replace afterwards
-			dict[currentKey] = cell.CellReference;
+			dict[cell.CellReference] = currentKey;
 			currentKey = null;
 		    }
 		    
