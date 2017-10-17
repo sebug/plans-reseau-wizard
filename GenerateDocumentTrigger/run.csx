@@ -104,6 +104,10 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    log.Info(string.Format("Cell contents: {0}", cell.CellValue.Text));
 		}
 	    }
+
+	    var allBytes = memoryStream.ToArray();
+	    dict["content"] = Convert.ToBase64String(allBytes);
+	    
 	    return req.CreateResponse(HttpStatusCode.OK, dict);
 	}
     }
