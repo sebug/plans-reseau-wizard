@@ -81,11 +81,11 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			}
 			else if (str.IndexOf("Etabli par", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
 			{
-			    dict["etabliPar"] = cell.CellReference;
+			    dict[cell.CellReference] = "etabliPar";
 			}
 			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
 			{
-			    dict["telephone"] = cell.CellReference;
+			    dict[cell.CellReference] = "telephone";
 			}
 		    }
 		}
