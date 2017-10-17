@@ -99,9 +99,16 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			}
 		    }
 		}
-		else if (cell.CellValue != null)
+	    }
+
+	    foreach (Cell cell in cells)
+	    {
+		if ((cell.DataType != null) && (cell.DataType == CellValues.SharedString))
 		{
-		    log.Info(string.Format("Cell contents: {0}", cell.CellValue.Text));
+		    if (dict.ContainsKey(cell.CellReference))
+		    {
+			log.Info("Dealing with " + dict[cell.CellReference]);
+		    }
 		}
 	    }
 
