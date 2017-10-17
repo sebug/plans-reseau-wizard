@@ -34,6 +34,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 	int len = await stream.ReadAsync(buffer, 0, 1024);
 	while (len > 0) {
 	    await memoryStream.WriteAsync(buffer, 0, len);
+	    len = await stream.ReadAsync(buffer, 0, 1024);
 	}
 	stream.Close();
 	
