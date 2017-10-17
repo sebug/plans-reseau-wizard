@@ -7,6 +7,8 @@
 
     var currentTemplate;
 
+    var mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
     function generateDocument() {
 	var res = $.Deferred();
 	var formData = new FormData();
@@ -33,8 +35,22 @@
 	});
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function () {
+	    var o;
+	    var url;
 	    if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-		res.resolve(true);
+		o = JSON.parse(request.responseText);
+		if (o && o.content)
+		{
+		    url = 'data:' + mimeType + ';base64,' + o.content;
+		    fetch(url)
+			.then(function (res) {
+			    return res.blob();
+			}).then(function (b) {
+			    res.resolve(b);
+			});
+		} else {
+		    res.resolve(true);
+		}
 	    }
 
 	};
@@ -65,7 +81,11 @@
 	isGenerating: ko.observable(false),
 	generateDocumentPutOnOneDrive: function () {
 	    viewModel.isGenerating(true);
-	    generateDocument().then(function () {
+	    generateDocument().then(function (b) {
+		if (b) {
+		    return uploadFile(b);
+		}
+	    }).always(function () {
 		viewModel.isGenerating(false);
 	    });
 	},
@@ -85,6 +105,25 @@
     viewModel.oneDriveAppURL = ko.computed(function () {
 	return 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + viewModel.oneDriveAppID() + '&scope=files.readwrite&response_type=token&redirect_url=' + encodeURI(location.href)
     });
+
+    function uploadFile(b) {
+	var res = $.Deferred();
+	var fileName = 'plan_reseau_' + viewModel.genre() + '_' + viewModel.numeroDeCours() + '.xlsx';
+	var parentItemID = viewModel.protectionCivileFolder().id;
+	console.log(fileName);
+	console.log(parentItemID);
+	var url = msGraphApiRoot + '/drive/items/'+ viewModel.protectionCivileFolder().id + ':/' + fileName + ':/content';
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function () {
+	    if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+		res.resolve(request.responseText);
+	    }
+	};
+	request.open("PUT", url);
+	request.setRequestHeader("Authorization", authHeader());
+	request.send(b);
+	return res.promise();
+    }
 
     function fillFields(templateInfo) {
 	var d;
