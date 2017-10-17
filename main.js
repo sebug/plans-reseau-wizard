@@ -11,6 +11,7 @@
 	var res = $.Deferred();
 	var formData = new FormData();
 	formData.append("template", currentTemplate);
+	var queryMockForm = $('<form></form>');
 	var keys = [
 	    'genre',
 	    'numeroDeCours',
@@ -22,8 +23,12 @@
 	    'emplacement'
 	];
 	keys.forEach(function (k) {
+	    var item;
 	    if (ko.unwrap(viewModel[k])) {
-		formData.append(k, ko.unwrap(viewModel[k]));
+		item = $('<input type="text" name="' +
+			 k + '" />');
+		item.val(ko.unwrap(viewModel[k]));
+		queryMockForm.append(item);
 	    }
 	});
 	var request = new XMLHttpRequest();
@@ -33,7 +38,8 @@
 	    }
 
 	};
-	request.open("POST", generateDocumentUrl);
+
+	request.open("POST", generateDocumentUrl + '?' + queryMockForm.serialize()); // pass the rest of the args via GET
 	request.send(formData);
 	return res.promise();
     }
