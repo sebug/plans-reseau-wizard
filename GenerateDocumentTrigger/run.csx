@@ -90,6 +90,10 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			{
 			    dict[cell.CellReference] = "etabliPar";
 			}
+			else if (str.IndexOf("Etabli le", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
+			{
+			    dict[cell.CellReference] = "etabliLe";
+			}
 			else if (str.IndexOf("Téléphone", StringComparison.InvariantCultureIgnoreCase) >= 0 && str.Contains(":"))
 			{
 			    dict[cell.CellReference] = "telephone";
@@ -105,9 +109,35 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    if (dict.ContainsKey(cell.CellReference))
 		    {
 			string k = dict[cell.CellReference];
-			if (qDict.ContainsKey(k))
+			if (k == "date" && qDict.ContainsKey("dateDebut") &&
+			    qDict.ContainsKey("dateFin")) {
+			    string v;
+			    string debut = qDict["dateDebut"];
+			    string fin = qDict["dateFin"];
+			    if (debut == fin)
+			    {
+				v = debut;
+			    }
+			    else
+			    {
+				v = debut + " - " + fin;
+			    }
+			    int newIdx = InsertSharedStringItem(v, sstpart);
+			    cell.CellValue = new CellValue(newIdx.ToString());
+			}
+			else if (k == "etabliLe")
+			{
+			    string v = String.Format("Etabli le : {0:dd.MM.yyyy}", DateTime.Now);
+			    int newIdx = InsertSharedStringItem(v, sstpart);
+			    cell.CellValue = new CellValue(newIdx.ToString());
+			}
+			else if (qDict.ContainsKey(k))
 			{
 			    string v = qDict[k];
+			    if (k == "etabliPar")
+			    {
+				v = "Etabli par : " + v;
+			    }
 			    int newIdx = InsertSharedStringItem(v, sstpart);
 			    cell.CellValue = new CellValue(newIdx.ToString());
 			}
