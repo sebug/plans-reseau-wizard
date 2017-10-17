@@ -28,7 +28,16 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     foreach (HttpContent ctnt in streamProvider.Contents)
     {
 	Stream stream = await ctnt.ReadAsStreamAsync();
-	using (SpreadsheetDocument doc = SpreadsheetDocument.Open(stream, false)) {
+
+	var memoryStream = new MemoryStream();
+	byte[] buffer = new byte[1024];
+	int len = await stream.ReadAsync(buffer, 0, 1024);
+	while (len > 0) {
+	    await memoryStream.WriteAsync(buffer, len);
+	}
+	stream.Close();
+	
+	using (SpreadsheetDocument doc = SpreadsheetDocument.Open(memoryStream, false)) {
 
 	    WorkbookPart workbookPart = doc.WorkbookPart;
 	    SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
