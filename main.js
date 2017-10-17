@@ -83,7 +83,16 @@
 	    viewModel.isGenerating(true);
 	    generateDocument().then(function (b) {
 		if (b) {
-		    return uploadFile(b);
+		    return uploadFile(b).then(function (o) {
+			if (o) {
+			    viewModel.lastFileName(o.name);
+			    viewModel.lastFileURL(o.webUrl);
+			} else {
+			    viewModel.lastFileName('');
+			    viewModel.lastFileURL('');
+			}
+			console.log(o);
+		    });
 		}
 	    }).always(function () {
 		viewModel.isGenerating(false);
@@ -99,7 +108,9 @@
 	emplacement: ko.observable(),
 	oneDriveAppID: ko.observable(),
 	oneDriveUser: ko.observable(),
-	protectionCivileFolder: ko.observable()
+	protectionCivileFolder: ko.observable(),
+	lastFileName: ko.observable(),
+	lastFileURL: ko.observable()
     };
 
     viewModel.oneDriveAppURL = ko.computed(function () {
@@ -114,10 +125,9 @@
 	console.log(parentItemID);
 	var url = msGraphApiRoot + '/drive/items/'+ viewModel.protectionCivileFolder().id + ':/' + fileName + ':/content';
 	var request = new XMLHttpRequest();
-	request.onreadystatechange = function () {
-	    if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-		res.resolve(request.responseText);
-	    }
+	request.onload = function (e) {
+	    var item = JSON.parse(e.currentTarget.responseText);
+	    res.resolve(item);
 	};
 	request.open("PUT", url);
 	request.setRequestHeader("Authorization", authHeader());

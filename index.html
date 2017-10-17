@@ -67,6 +67,13 @@
 
 
 	<button class="ui button" data-bind="click: generateDocumentPutOnOneDrive, css: { loading: isGenerating }">Générer plan réseau</button>
+
+
+	<!-- ko if: lastFileName -->
+	<a data-bind="attr: { href: lastFileURL }"><span data-bind="text: lastFileName"></span></a>
+	<!-- /ko -->
+
+	
 	<!-- /ko -->
 	
       </div>
