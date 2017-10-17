@@ -115,12 +115,11 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		    }
 		}
 	    }
-
-	    var allBytes = memoryStream.ToArray();
-	    dict["content"] = Convert.ToBase64String(allBytes);
-	    
-	    return req.CreateResponse(HttpStatusCode.OK, dict);
 	}
+	var allBytes = memoryStream.ToArray();
+	dict["content"] = Convert.ToBase64String(allBytes);
+	    
+	return req.CreateResponse(HttpStatusCode.OK, dict);
     }
 
     return req.CreateResponse(HttpStatusCode.OK, "Read the template file");
