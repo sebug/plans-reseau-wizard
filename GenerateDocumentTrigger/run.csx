@@ -4,6 +4,7 @@
 #r "DocumentFormat.OpenXml.dll"
 using System.Net;
 using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Collections.Generic;
@@ -12,12 +13,8 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 {
     log.Info("Generate document from multipart");
 
-    var queryNameValuePairs = req.GetQueryNameValuePairs();
-    log.Info("But first, the query parameters");
-    foreach (var kvp in queryNameValuePairs)
-    {
-	log.Info(kvp.Key + " -> " + kvp.Value);
-    }
+    var qDict = req.GetQueryNameValuePairs().ToDictionary(kvp => kvp.Key,
+							  kvp => kvp.Value);
 
     var streamProvider = new MultipartMemoryStreamProvider();
 
@@ -107,7 +104,14 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 		{
 		    if (dict.ContainsKey(cell.CellReference))
 		    {
-			log.Info("Dealing with " + dict[cell.CellReference]);
+			string k = dict[cell.CellReference];
+			if (qDict.ContainsKey(k))
+			{
+			    string v = qDict[k];
+			    int newIdx = InsertSharedStringItem(v, sstPart);
+			    cell.CellValue = new CellValue(newIdx.ToString());
+			}
+			log.Info("Dealt with " + dict[cell.CellReference]);
 		    }
 		}
 	    }
@@ -120,4 +124,32 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     }
 
     return req.CreateResponse(HttpStatusCode.OK, "Read the template file");
+}
+
+public static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
+{
+    // If the part does not contain a SharedStringTable, create one.
+    if (shareStringPart.SharedStringTable == null)
+    {
+        shareStringPart.SharedStringTable = new SharedStringTable();
+    }
+
+    int i = 0;
+
+    // Iterate through all the items in the SharedStringTable. If the text already exists, return its index.
+    foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
+    {
+        if (item.InnerText == text)
+        {
+            return i;
+        }
+
+        i++;
+    }
+
+    // The text does not exist in the part. Create the SharedStringItem and return its index.
+    shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
+    shareStringPart.SharedStringTable.Save();
+
+    return i;
 }
