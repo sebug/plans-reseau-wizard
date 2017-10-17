@@ -5,10 +5,27 @@
 
     var generateDocumentUrl = "https://PlansReseau.azurewebsites.net/api/GenerateDocumentTrigger";
 
+    var currentTemplate;
+
     function generateDocument() {
 	var res = $.Deferred();
 	var formData = new FormData();
-	formData.append("template", file);
+	formData.append("template", currentTemplate);
+	var keys = [
+	    'genre',
+	    'numeroDeCours',
+	    'etabliPar',
+	    'organisation',
+	    'dateDebut',
+	    'dateFin',
+	    'telephone',
+	    'emplacement'
+	];
+	keys.forEach(function (k) {
+	    if (ko.unwrap(viewModel[k])) {
+		formData.append(k, ko.unwrap(viewModel[k]));
+	    }
+	});
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function () {
 	    if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
@@ -25,6 +42,7 @@
 	templateFile: ko.observable(),
 	analyzeTemplate: function(file) {
 	    if (file) {
+		currentTemplate = file;
 		var formData = new FormData();
 		formData.append("template", file);
 		var request = new XMLHttpRequest();
@@ -98,8 +116,12 @@
 
     var msGraphApiRoot = "https://graph.microsoft.com/v1.0/me";
 
+    function accessTokenFromURL() {
+	return /access_token=([^&]+)/.exec(location.href)[1];
+    }
+
     function authHeader() {
-	var access_token = /access_token=([^&]+)/.exec(location.href)[1];
+	var access_token = accessTokenFromURL();
 	return 'bearer '+ access_token;
     }
 
@@ -138,7 +160,7 @@
 	    data: JSON.stringify({
 		name: folderName,
 		folder: {},
-		'@microsoft.graph.confilcBehavior': 'rename'
+		'@microsoft.graph.conflictBehavior': 'rename'
 	    }),
 	    type: 'POST'
 	}).then(function (createdFolder) {
@@ -169,6 +191,9 @@
     }
 
     function listDrive() {
+	if (!accessTokenFromURL()) {
+	    return;
+	}
 	$.ajax({
 	    url: msGraphApiRoot + '/drive',
 	    headers: {
