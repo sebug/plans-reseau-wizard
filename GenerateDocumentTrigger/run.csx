@@ -35,7 +35,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 	}
 	stream.Close();
 	
-	using (SpreadsheetDocument doc = SpreadsheetDocument.Open(memoryStream, false)) {
+	using (SpreadsheetDocument doc = SpreadsheetDocument.Open(memoryStream, true)) {
 
 	    WorkbookPart workbookPart = doc.WorkbookPart;
 	    SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
