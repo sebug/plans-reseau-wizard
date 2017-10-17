@@ -2,6 +2,24 @@
 (function () {
 
     var filePostUrl = "https://PlansReseau.azurewebsites.net/api/TemplateAnalyzeTrigger";
+
+    var generateDocumentUrl = "https://PlansReseau.azurewebsites.net/api/GenerateDocumentTrigger";
+
+    function generateDocument() {
+	var res = $.Deferred();
+	var formData = new FormData();
+	formData.append("template", file);
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function () {
+	    if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+		res.resolve(true);
+	    }
+
+	};
+	request.open("POST", generateDocumentUrl);
+	request.send(formData);
+	return res.promise();
+    }
     
     var viewModel = {
 	templateFile: ko.observable(),
@@ -20,6 +38,13 @@
 		request.send(formData);
 	    }
 	},
+	isGenerating: ko.observable(false),
+	generateDocumentPutOnOneDrive: function () {
+	    viewModel.isGenerating(true);
+	    generateDocument().then(function () {
+		viewModel.isGenerating(false);
+	    });
+	},
 	genre: ko.observable(),
 	numeroDeCours: ko.observable(),
 	etabliPar: ko.observable(),
@@ -29,7 +54,8 @@
 	telephone: ko.observable(),
 	emplacement: ko.observable(),
 	oneDriveAppID: ko.observable(),
-	oneDriveUser: ko.observable()
+	oneDriveUser: ko.observable(),
+	protectionCivileFolder: ko.observable()
     };
 
     viewModel.oneDriveAppURL = ko.computed(function () {
@@ -162,6 +188,8 @@
 			    } else {
 				return createFolder(rootFolder.id, 'Protection Civile');
 			    }
+			}).then(function (f) {
+			    viewModel.protectionCivileFolder(f);
 			});
 		    }
 		});

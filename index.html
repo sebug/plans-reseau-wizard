@@ -58,9 +58,17 @@
       <!-- /ko --></p>
 
       <!-- /ko -->
-      <!-- ko with: oneDriveUser -->
+      <!-- ko if: oneDriveUser -->
       <div class="ui segment">
-	<p>Logged into OneDrive as <span data-bind="text: displayName"></span></p>
+	<p>Logged into OneDrive as <span data-bind="text: oneDriveUser().displayName"></span></p>
+
+	<!-- ko if: protectionCivileFolder -->
+	<p>Folder: <span data-bind="text: protectionCivileFolder().name"></span></p>
+
+
+	<button class="ui button" data-bind="click: generateDocumentPutOnOneDrive, css: { loading: isGenerating }">Générer plan réseau</button>
+	<!-- /ko -->
+	
       </div>
       <!-- /ko -->
     </div>
