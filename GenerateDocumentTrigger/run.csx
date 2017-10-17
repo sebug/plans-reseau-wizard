@@ -12,6 +12,13 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 {
     log.Info("Generate document from multipart");
 
+    var queryNameValuePairs = req.GetQueryNameValuePairs();
+    log.Info("But first, the query parameters");
+    foreach (var kvp in queryNameValuePairs)
+    {
+	log.Info(kvp.Key + " -> " + kvp.Value);
+    }
+
     var streamProvider = new MultipartMemoryStreamProvider();
 
     await req.Content.ReadAsMultipartAsync(streamProvider);
