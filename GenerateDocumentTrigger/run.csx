@@ -108,7 +108,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 			if (qDict.ContainsKey(k))
 			{
 			    string v = qDict[k];
-			    int newIdx = InsertSharedStringItem(v, sstPart);
+			    int newIdx = InsertSharedStringItem(v, sstpart);
 			    cell.CellValue = new CellValue(newIdx.ToString());
 			}
 			log.Info("Dealt with " + dict[cell.CellReference]);
