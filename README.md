@@ -1,6 +1,8 @@
 ## Créateur des plans réseau
 Cet outil permet de faire des demandes de plan réseau d'une manière guidée.
 
+Vous pouvez vous connecter depuis https://storageplansreseau.blob.core.windows.net/reseaustatic/index.html , mais vous avez besoin d'un compte OneDrive + le template de plan réseau de base.
+
 # Documentation dev
 You'll need to specify environment variables for AZURE_STORAGE_CONNECTION_STRING that you can obtain using
 
