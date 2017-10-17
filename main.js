@@ -72,17 +72,100 @@
 
     var msGraphApiRoot = "https://graph.microsoft.com/v1.0/me";
 
-    function listDrive() {
+    function authHeader() {
 	var access_token = /access_token=([^&]+)/.exec(location.href)[1];
+	return 'bearer '+ access_token;
+    }
+
+    function getChildItems(parentID) {
+	return $.ajax({
+	    url: msGraphApiRoot + '/drive/items/'+ parentID + '/children',
+	    headers: {
+		Authorization: authHeader()
+	    }
+	}).then(function (res) {
+	    console.log(res);
+	    return res;
+	});
+    }
+
+    function getItem(itemID) {
+	return $.ajax({
+	    url: msGraphApiRoot + '/drive/items/'+ itemID,
+	    headers: {
+		Authorization: authHeader()
+	    }
+	}).then(function (res) {
+	    console.log(res);
+	    return res;
+	});
+    }
+
+    function createFolder(parentID, folderName) {
+	return $.ajax({
+	    url: msGraphApiRoot + '/drive/items/' + parentID + '/children',
+	    headers: {
+		Authorization: authHeader()
+	    },
+	    contentType: 'application/json; charset=utf-8',
+	    dataType: 'json',
+	    data: JSON.stringify({
+		name: folderName,
+		folder: {},
+		'@microsoft.graph.confilcBehavior': 'rename'
+	    }),
+	    type: 'POST'
+	}).then(function (createdFolder) {
+	    console.log(createdFolder);
+	    return createdFolder;
+	});
+    }
+
+    function getRoot() {
+	return $.ajax({
+	    url: msGraphApiRoot + '/drive/root',
+	    headers: {
+		Authorization: authHeader()
+	    }
+	}).then(function (res) {
+	    console.log(res);
+	    return res;
+	});
+    }
+
+    function getFolder(children, folderName) {
+	if (!children || !children.value) {
+	    return false;
+	}
+	return children.value.filter(function (c) {
+	    return c.name && c.name.toLowerCase() === folderName.toLowerCase();
+	})[0];
+    }
+
+    function listDrive() {
 	$.ajax({
 	    url: msGraphApiRoot + '/drive',
 	    headers: {
-		Authorization: 'bearer ' + access_token
+		Authorization: authHeader()
 	    }
 	}).then(function (res) {
 	    if (res && res.owner && res.owner.user) {
 		viewModel.oneDriveUser(res.owner.user);
 	    }
+	    return getRoot().then(function (root) {
+		return getItem(root.id).then(function (rootFolder) {
+		    if (rootFolder.folder && rootFolder.folder.childCount) {
+			return getChildItems(rootFolder.id).then(function (children) {
+			    var f = getFolder(children, 'Protection Civile');
+			    if (f) {
+				return f;
+			    } else {
+				return createFolder(rootFolder.id, 'Protection Civile');
+			    }
+			});
+		    }
+		});
+	    });
 	});
     }
     
