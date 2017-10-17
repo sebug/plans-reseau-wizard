@@ -29,7 +29,7 @@
 	telephone: ko.observable(),
 	emplacement: ko.observable(),
 	oneDriveAppID: ko.observable(),
-	oneDriveSecret: ko.observable()
+	oneDriveUser: ko.observable()
     };
 
     viewModel.oneDriveAppURL = ko.computed(function () {
@@ -67,18 +67,28 @@
 	    dataType: 'json'
 	}).then(function (items) {
 	    viewModel.oneDriveAppID(items.appID);
-	    viewModel.oneDriveSecret(items.secret);
 	});
     }
 
-    function postDocument() {
+    var msGraphApiRoot = "https://graph.microsoft.com/v1.0/me";
+
+    function listDrive() {
 	var access_token = /access_token=([^&]+)/.exec(location.href)[1];
-	console.log(access_token);
+	$.ajax({
+	    url: msGraphApiRoot + '/drive',
+	    headers: {
+		Authorization: 'bearer ' + access_token
+	    }
+	}).then(function (res) {
+	    if (res && res.owner && res.owner.user) {
+		viewModel.oneDriveUser(res.owner.user);
+	    }
+	});
     }
     
     $(document).ready(function () {
 	ko.applyBindings(viewModel, $('.main-content')[0]);
 	fetchWizardEntryData();
-	postDocument();
+	listDrive();
     });
 }());

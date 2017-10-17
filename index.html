@@ -52,9 +52,17 @@
 	
       </form>
 
+      <!-- ko ifnot: oneDriveUser -->
       <p><!-- ko if: oneDriveAppURL -->
       <a data-bind="attr: { href: oneDriveAppURL }">Se connecter avec OneDrive</a>
       <!-- /ko --></p>
+
+      <!-- /ko -->
+      <!-- ko with: oneDriveUser -->
+      <div class="ui segment">
+	<p>Logged into OneDrive as <span data-bind="text: displayName"></span></p>
+      </div>
+      <!-- /ko -->
     </div>
 
 
